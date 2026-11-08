@@ -1,0 +1,6 @@
+# Settings-only file: builds are orchestrated by scripts/build.mjs (the workspace packages
+# are copied into node_modules because this drive cannot create symlinks).
+packages: []
+
+nodeLinker: hoisted
+packageImportMethod: copy

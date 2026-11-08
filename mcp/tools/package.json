@@ -1,0 +1,40 @@
+{
+  "name": "@kubeforge/mcp-tools",
+  "version": "0.1.0",
+  "private": true,
+  "description": "@kubeforge/mcp-tools package of the Kubeforge workspace.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\""
+  },
+  "dependencies": {
+    "@kubeforge/core": "workspace:*",
+    "@kubeforge/mcp-schemas": "workspace:*",
+    "@kubeforge/cluster-agent": "workspace:*",
+    "@kubeforge/security-agent": "workspace:*",
+    "@kubeforge/observability-agent": "workspace:*",
+    "@kubeforge/gitops-agent": "workspace:*",
+    "@kubeforge/cost-agent": "workspace:*",
+    "@kubeforge/doctor-agent": "workspace:*",
+    "@kubeforge/kubernetes": "workspace:*",
+    "@kubeforge/helm": "workspace:*",
+    "@kubeforge/monitoring": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}

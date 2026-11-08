@@ -1,0 +1,30 @@
+{
+  "name": "@kubeforge/tests",
+  "version": "0.1.0",
+  "private": true,
+  "description": "@kubeforge/tests package of the Kubeforge workspace.",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "test": "tsc -p tsconfig.json && node --test \"dist/**/*.test.js\""
+  },
+  "dependencies": {
+    "@kubeforge/core": "workspace:*",
+    "@kubeforge/cluster-agent": "workspace:*",
+    "@kubeforge/cost-agent": "workspace:*",
+    "@kubeforge/docker": "workspace:*",
+    "@kubeforge/kubernetes": "workspace:*",
+    "@kubeforge/security": "workspace:*",
+    "@kubeforge/mcp-tools": "workspace:*",
+    "@kubeforge/mcp-servers": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}
