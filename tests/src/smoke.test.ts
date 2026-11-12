@@ -99,8 +99,20 @@ describe("mcp", () => {
 
     const listed = await dispatch({ jsonrpc: "2.0", id: 2, method: "tools/list" });
     const tools = (listed?.result as { tools: Array<{ name: string }> }).tools;
-    assert.equal(tools.length, 6);
-    assert.ok(tools.some((tool) => tool.name === "kubeforge_doctor_report"));
+    assert.equal(tools.length, 14);
+    for (const name of [
+      "create_cluster",
+      "delete_cluster",
+      "deploy_app",
+      "rollback_app",
+      "scan_security",
+      "list_nodes",
+      "cluster_status",
+      "cost_report",
+      "kubeforge_doctor_report",
+    ]) {
+      assert.ok(tools.some((tool) => tool.name === name), `missing tool ${name}`);
+    }
   });
 
   test("runs the doctor report over the demo runtime", async () => {

@@ -64,6 +64,22 @@ printf '%s\n' \
   | pnpm mcp
 ```
 
+### Tools
+
+| Tool | Input | Purpose |
+| --- | --- | --- |
+| `create_cluster` | `name`, `provider`, `nodes`, ... | Create a cluster on AKS, EKS, GKE, k3s, Minikube, or Docker Desktop |
+| `delete_cluster` | `name`, `provider`, ... | Delete a cluster |
+| `deploy_app` | `manifests`, `namespace`, `wait` | Apply manifests with `kubectl apply` |
+| `rollback_app` | `kind`, `name`, `revision` | Roll back a Deployment, StatefulSet, or DaemonSet |
+| `scan_security` | `checks`, `namespace`, ... | Scan workloads, RBAC, Secrets, and pod policies |
+| `list_nodes` | `labelSelector` | List nodes filtered by labels |
+| `cluster_status` | `context`, `kubeconfig` | Summarize node readiness and workload health |
+| `cost_report` | `rates`, `namespaceBudget` | Estimate monthly cost per namespace |
+
+The six `kubeforge_*` tools wrap the diagnostic agents and take no input. Tool arguments are passed
+as the JSON-RPC `params.arguments` object.
+
 ## Using a real cluster
 
 ```ts

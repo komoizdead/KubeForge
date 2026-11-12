@@ -55,12 +55,13 @@ export function createDispatcher(tools: KubeforgeTool[], serverInfo: ServerInfo)
       }
 
       try {
-        const report = await tool.execute();
+        const args = (params as { arguments?: unknown }).arguments;
+        const report = await tool.execute(args);
         return {
           jsonrpc: "2.0",
           id,
           result: {
-            content: [{ type: "text", text: JSON.stringify(report, null, 2) }],
+            content: [{ type: "text", text: JSON.stringify(report ?? null, null, 2) }],
             isError: false,
           },
         };

@@ -1,30 +1,22 @@
-import { createLogger, type Agent, type AgentReport, type Logger } from "@kubeforge/core";
+import { createLogger, type Agent, type Logger } from "@kubeforge/core";
 import { createClusterAgent } from "@kubeforge/cluster-agent";
 import { createCostAgent } from "@kubeforge/cost-agent";
 import { createDoctorAgent } from "@kubeforge/doctor-agent";
-import { createGitopsAgent, type DesiredRelease } from "@kubeforge/gitops-agent";
-import type { HelmClient } from "@kubeforge/helm";
-import type { KubernetesClient } from "@kubeforge/kubernetes";
-import { noInputSchema, type ToolDescriptor } from "@kubeforge/mcp-schemas";
-import type { MonitoringClient } from "@kubeforge/monitoring";
+import { createGitopsAgent } from "@kubeforge/gitops-agent";
+import { noInputSchema } from "@kubeforge/mcp-schemas";
 import { createObservabilityAgent } from "@kubeforge/observability-agent";
 import { createSecurityAgent } from "@kubeforge/security-agent";
+import type { KubeforgeTool, ToolOptions, ToolRuntime } from "./types.js";
+import { createClusterStatusTool } from "./tools/cluster-status.js";
+import { createCostReportTool } from "./tools/cost-report.js";
+import { createCreateClusterTool } from "./tools/create-cluster.js";
+import { createDeleteClusterTool } from "./tools/delete-cluster.js";
+import { createDeployAppTool } from "./tools/deploy-app.js";
+import { createListNodesTool } from "./tools/list-nodes.js";
+import { createRollbackAppTool } from "./tools/rollback-app.js";
+import { createScanSecurityTool } from "./tools/scan-security.js";
 
-export interface ToolRuntime {
-  kubernetes: KubernetesClient;
-  helm: HelmClient;
-  monitoring: MonitoringClient;
-  desiredReleases: DesiredRelease[];
-}
-
-export interface KubeforgeTool {
-  definition: ToolDescriptor;
-  execute(): Promise<AgentReport>;
-}
-
-export interface ToolOptions {
-  logger?: Logger;
-}
+export type { KubeforgeTool, ToolOptions, ToolRuntime } from "./types.js";
 
 function tool(name: string, description: string, factory: () => Agent, loggerFor: (name: string) => Logger): KubeforgeTool {
   return {
@@ -39,6 +31,7 @@ export function createKubeforgeTools(
 ): KubeforgeTool[] {
   const providedLogger = options.logger;
   const loggerFor = providedLogger ? () => providedLogger : (name: string) => createLogger(name);
+  const toolRuntime: ToolRuntime = { ...runtime, logger: providedLogger ?? runtime.logger };
 
   const cluster = () => createClusterAgent({ client: runtime.kubernetes });
   const security = () => createSecurityAgent({ client: runtime.kubernetes });
@@ -49,6 +42,14 @@ export function createKubeforgeTools(
   const doctor = () => createDoctorAgent({ agents: [cluster(), security(), observability(), gitops(), cost()] });
 
   return [
+    createCreateClusterTool(toolRuntime),
+    createDeleteClusterTool(toolRuntime),
+    createDeployAppTool(toolRuntime),
+    createRollbackAppTool(toolRuntime),
+    createScanSecurityTool(toolRuntime),
+    createListNodesTool(toolRuntime),
+    createClusterStatusTool(toolRuntime),
+    createCostReportTool(toolRuntime),
     tool("kubeforge_cluster_inspect", "Inspect node readiness and workload health.", cluster, loggerFor),
     tool("kubeforge_security_scan", "Scan workloads against the default security rules.", security, loggerFor),
     tool(

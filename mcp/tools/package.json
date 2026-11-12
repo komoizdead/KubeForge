@@ -31,7 +31,8 @@
     "@kubeforge/doctor-agent": "workspace:*",
     "@kubeforge/kubernetes": "workspace:*",
     "@kubeforge/helm": "workspace:*",
-    "@kubeforge/monitoring": "workspace:*"
+    "@kubeforge/monitoring": "workspace:*",
+    "@kubeforge/security": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
